@@ -17,7 +17,9 @@
     </v-navigation-drawer>
     <v-main color="background">
       <v-container class="pt-5 background" style="min-height: 100vh; padding-bottom: 100px;" fluid>
-        <Nuxt />
+        <keep-alive>
+          <Nuxt />
+        </keep-alive>
       </v-container>
     </v-main>
     <v-expand-transition>
