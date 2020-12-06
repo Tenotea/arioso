@@ -18,7 +18,7 @@
       </v-btn>
       <v-progress-circular
         v-else
-        color="primary"
+        :color="Math.floor(uploadCount) === 100 ? 'green accent-4' : 'primary'"
         :indeterminate="uploadCount < 1"
         :value="uploadCount"
         width="5"
@@ -26,8 +26,19 @@
         rotate="-90"
         class="mx-auto d-flex"
       >
-        {{ uploadCount.toFixed(1) }}%
+        {{ uploadCount.toFixed(0) }}%
       </v-progress-circular>
+      <v-card-actions>
+        <v-btn
+          v-if="Math.floor(uploadCount) === 100"
+          color="primary"
+          rounded
+          class="px-4 mx-auto mt-5"
+          @click="reset()"
+        >
+          Upload again
+        </v-btn>
+      </v-card-actions>
     </v-card>
   </v-container>
 </template>
@@ -64,6 +75,7 @@ export default {
           this.uploading = true
           this.uploadCount = 0
           const fillFraction = 100 / this.filesToUpload.length
+          console.log(`Each file is ${fillFraction}% of ${this.filesToUpload.length}`)
           this.filesToUpload.forEach((file, index) => {
             const musicData = {
               _id: randomBytes(16).toString('hex'),
@@ -99,19 +111,21 @@ export default {
                       const base64Image = `data:${tags.picture.format};base64,${window.btoa(base64String)}`
                       musicData.thumb = base64Image
                     }
-                    this.storeAudioFile(musicData).then(() => {
+                    this.storeAudioFile(musicData).catch((error) => {
+                      console.log(error)
+                    }).finally(() => {
                       this.uploadCount += fillFraction
                       if (index === (this.filesToUpload.length - 1)) {
-                        this.uploading = false
                         this.$store.dispatch('fetchAllMusic')
                       }
                     })
                   },
                   onError: () => {
-                    this.storeAudioFile(musicData).then(() => {
+                    this.storeAudioFile(musicData).catch((error) => {
+                      console.log(error)
+                    }).finally(() => {
                       this.uploadCount += fillFraction
                       if (index === (this.filesToUpload.length - 1)) {
-                        this.uploading = false
                         this.$store.dispatch('fetchAllMusic')
                       }
                     })
@@ -121,7 +135,6 @@ export default {
               audioPlayer.addEventListener('error', (playerErrorEvent) => {
                 this.uploadCount += fillFraction
                 if (index === (this.filesToUpload.length - 1)) {
-                  this.uploading = false
                   this.$store.dispatch('fetchAllMusic')
                 }
                 throw new Error('Could not load ' + file.name)
@@ -142,6 +155,11 @@ export default {
     // Method
     storeAudioFile (musicFile) {
       return localForage.setItem(musicFile._id, musicFile)
+    },
+    reset () {
+      this.uploadCount = 0
+      this.filesToUpload = []
+      this.uploading = false
     }
   }
 }
