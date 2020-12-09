@@ -4,7 +4,7 @@ export default {
   target: 'server',
   server: {
     port: 8000, // default: 3000
-    host: '192.168.43.9' // default: localhost
+    host: 'localhost' // default: localhost
   },
   head: {
     titleTemplate: '%s - ' + process.env.npm_package_name,

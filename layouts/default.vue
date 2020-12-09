@@ -17,28 +17,23 @@
     </v-navigation-drawer>
     <v-main color="background">
       <v-container class="pt-5 background" style="min-height: 100vh; padding-bottom: 100px;" fluid>
-        <keep-alive>
-          <Nuxt />
-        </keep-alive>
+        <Nuxt />
       </v-container>
     </v-main>
     <v-expand-transition>
-      <v-bottom-sheet
-        v-model="playerState"
-        persistent
-        hide-overlay
-        no-click-animation
-        :fullscreen="isPlayerOpen"
-        scrollable
-      >
-        <v-card
-          id="playerCard"
-          class="background white--text pt-0"
-          height="100"
-        >
-          <player :is-fullscreen-player="isPlayerOpen" @fullScreen="fullScreenMode" />
-        </v-card>
-      </v-bottom-sheet>
+      <div tabindex="-1" class="v-dialog__content v-dialog__content--active">
+        <transition name="bottom-sheet-transition">
+          <div :class="`v-dialog v-bottom-sheet v-dialog--active v-dialog--persistent ${isPlayerOpen && 'v-dialog--fullscreen'}`" style="{ transformOrigin:'center center'}">
+            <v-card
+              id="playerCard"
+              class="background white--text pt-0"
+              height="100"
+            >
+              <player :is-fullscreen-player="isPlayerOpen" @fullScreen="fullScreenMode" />
+            </v-card>
+          </div>
+        </transition>
+      </div>
     </v-expand-transition>
   </v-app>
 </template>

@@ -79,7 +79,7 @@ export default {
   },
   methods: {
     enterFullScreen () {
-      this.$emit('enterFullScreen')
+      this.$emit('toggleFullScreen')
     },
     changePlayState () {
       this.$emit('changePlayState')

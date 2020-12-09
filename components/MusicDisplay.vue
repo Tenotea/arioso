@@ -34,11 +34,33 @@
           </v-col>
           <v-col cols="2" md="1" class="music-options">
             <v-card-actions class="music-options">
-              <v-btn class="music-options" fab color="transparent" elevation="0" small>
-                <v-icon :color="playing ? 'primary' : 'white'" small class="music-options">
-                  mdi-dots-vertical
-                </v-icon>
-              </v-btn>
+              <v-menu transition="slide-y-transition" bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    class="music-options"
+                    fab
+                    color="transparent"
+                    elevation="0"
+                    small
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <v-icon :color="playing ? 'primary' : 'white'" small class="music-options">
+                      mdi-dots-vertical
+                    </v-icon>
+                  </v-btn>
+                </template>
+                <v-list color="background" min-width="150px">
+                  <v-list-item
+                    v-for="option in options"
+                    :key="option.id"
+                  >
+                    <v-list-item-title @[option.eventName]="option.action">
+                      {{ option.name }}
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </v-card-actions>
           </v-col>
         </v-row>
@@ -57,16 +79,32 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      options: [
+        {
+          id: 1,
+          name: 'Delete',
+          eventName: 'click',
+          action: () => {
+            this.deleteMusicItem(this.music._id)
+          }
+        }
+      ]
+    }
+  },
   computed: {
     playing () {
       return this.$store.state.currentPlayingMusic && (this.$store.state.currentPlayingMusic._id === this.music._id)
     }
   },
   methods: {
-    ...mapActions(['updatePlayingMusic']),
+    ...mapActions(['updatePlayingMusic', 'deleteMusicItem']),
     playMusic (e) {
       if (!e.target.classList.contains('music-options')) {
         this.updatePlayingMusic({ music: this.music })
+      } else {
+        // Open options
       }
     }
   }
