@@ -1,5 +1,5 @@
 <template>
-  <v-container :style="{maxWidth: '1000px'}">
+  <v-container :style="{maxWidth: '1000px'}" fluid>
     <v-app-bar elevation="0" color="background">
       <v-app-bar-nav-icon color="white" @click="exitFullScreen">
         <v-icon large>
@@ -18,7 +18,14 @@
         </v-icon>
       </v-app-bar-nav-icon>
     </v-app-bar>
-    <v-card max-width="600px" color="background" tile flat class="mx-auto mt-5 mt-md-8 pa-7">
+    <v-card
+      max-width="600px"
+      width="100%"
+      color="background"
+      tile
+      flat
+      class="mx-auto mt-5 mt-md-8 "
+    >
       <div class="thumbVisser mx-auto mb-13 mb-md-16">
         <v-avatar :color="!music.thumb ? 'primary' : ''" :size="viewPort" md="400" class="d-block song-disc elevation-10" :class="{'active-song': playing}">
           <v-img v-if="music.thumb" :src="music.thumb" alt="arioso" />
@@ -45,8 +52,8 @@
         </p>
       </v-card-text>
       <v-card-actions class="d-flex align-center justify-space-between mx-auto mt-n2 mt-md-7" :style="{maxWidth: '400px'}">
-        <v-btn :color="!toLoop ? 'grey darken-4' : 'primary white--text'" fab x-small @click="repeat">
-          <v-icon color="grey lighten-1">
+        <v-btn :color="!toLoop ? 'grey darken-4' : 'primary '" fab x-small @click="repeat">
+          <v-icon :color="!toLoop ? 'grey lighten-1' : 'white'">
             {{ toLoop === true ? 'mdi-repeat-once' : 'mdi-repeat' }}
           </v-icon>
         </v-btn>
@@ -56,14 +63,13 @@
           </v-icon>
         </v-btn>
         <v-btn
-          large
           color="primary"
           fab
           outlined
           elevation="5"
           @click="changePlayState"
         >
-          <v-icon large>
+          <v-icon>
             {{ playing ? 'mdi-pause' : 'mdi-play' }}
           </v-icon>
         </v-btn>
@@ -72,8 +78,8 @@
             mdi-skip-next
           </v-icon>
         </v-btn>
-        <v-btn color="grey darken-4" fab x-small @click="previousTrack">
-          <v-icon color="grey lighten-1">
+        <v-btn :color="!shuffled ? 'grey darken-4' : 'primary '" fab x-small @click="shufflePlaylist">
+          <v-icon :color="!shuffled ? 'grey lighten-1' : 'white'">
             mdi-shuffle
           </v-icon>
         </v-btn>
@@ -102,6 +108,7 @@ export default {
   },
   data () {
     return {
+      shuffled: false
     }
   },
   computed: {
@@ -114,7 +121,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['updatePlayingMusic']),
+    ...mapActions(['updatePlayingMusic', 'shuffleCurrentPlaylist']),
     exitFullScreen (e) {
       this.$emit('toggleFullScreen')
     },
@@ -140,6 +147,10 @@ export default {
     },
     repeat () {
       this.$emit('loopMusic')
+    },
+    shufflePlaylist () {
+      this.shuffled = !this.shuffled
+      this.shuffleCurrentPlaylist(this.shuffled)
     }
   }
 }

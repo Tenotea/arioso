@@ -28,6 +28,7 @@
               id="playerCard"
               class="background white--text pt-0"
               height="100"
+              width="100%"
             >
               <player :is-fullscreen-player="isPlayerOpen" @fullScreen="fullScreenMode" />
             </v-card>
