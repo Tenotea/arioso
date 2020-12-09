@@ -45,26 +45,36 @@
         </p>
       </v-card-text>
       <v-card-actions class="d-flex align-center justify-space-between mx-auto mt-n2 mt-md-7" :style="{maxWidth: '400px'}">
-        <v-btn color="grey darken-4" fab @click="previousTrack">
+        <v-btn :color="!toLoop ? 'grey darken-4' : 'primary white--text'" fab x-small @click="repeat">
+          <v-icon color="grey lighten-1">
+            {{ toLoop === true ? 'mdi-repeat-once' : 'mdi-repeat' }}
+          </v-icon>
+        </v-btn>
+        <v-btn color="grey darken-4" fab small @click="previousTrack">
           <v-icon color="grey lighten-1">
             mdi-skip-previous
           </v-icon>
         </v-btn>
         <v-btn
-          x-large
+          large
           color="primary"
           fab
           outlined
           elevation="5"
           @click="changePlayState"
         >
-          <v-icon x-large>
+          <v-icon large>
             {{ playing ? 'mdi-pause' : 'mdi-play' }}
           </v-icon>
         </v-btn>
-        <v-btn color="grey darken-4" fab @click="nextTrack">
+        <v-btn color="grey darken-4" fab small @click="nextTrack">
           <v-icon color="grey lighten-1">
             mdi-skip-next
+          </v-icon>
+        </v-btn>
+        <v-btn color="grey darken-4" fab x-small @click="previousTrack">
+          <v-icon color="grey lighten-1">
+            mdi-shuffle
           </v-icon>
         </v-btn>
       </v-card-actions>
@@ -77,6 +87,10 @@ import { mapActions } from 'vuex'
 export default {
   props: {
     playing: Boolean,
+    toLoop: {
+      type: [Boolean, String],
+      default: false
+    },
     music: {
       type: Object,
       required: true
@@ -102,7 +116,7 @@ export default {
   methods: {
     ...mapActions(['updatePlayingMusic']),
     exitFullScreen (e) {
-      this.$emit('exitFullScreen')
+      this.$emit('toggleFullScreen')
     },
     changePlayState () {
       this.$emit('changePlayState')
@@ -123,6 +137,9 @@ export default {
     },
     previousTrack () {
       this.updatePlayingMusic({ prev: true })
+    },
+    repeat () {
+      this.$emit('loopMusic')
     }
   }
 }

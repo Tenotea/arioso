@@ -44,7 +44,6 @@
 </template>
 
 <script>
-/* eslint-disable no-console */
 import { randomBytes } from 'crypto'
 import jsmediatags from 'jsmediatags'
 import localForage from 'localforage'
@@ -75,7 +74,6 @@ export default {
           this.uploading = true
           this.uploadCount = 0
           const fillFraction = 100 / this.filesToUpload.length
-          console.log(`Each file is ${fillFraction}% of ${this.filesToUpload.length}`)
           this.filesToUpload.forEach((file, index) => {
             const musicData = {
               _id: randomBytes(16).toString('hex'),

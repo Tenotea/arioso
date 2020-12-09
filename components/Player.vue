@@ -4,33 +4,27 @@
       ref="audioOutput"
       :src="currentPlayingMusic && currentPlayingMusic.url"
       :autoplay="currentPlayingMusic"
+      :loop="toLoop === true"
       hidden
       @playing="playing = true"
       @timeupdate="updateTrackPosition"
       @ended="playing = false, nextTrack()"
     />
-    <player-mini
-      v-if="!isFullscreenPlayer"
-      :music="currentPlayingMusic || {}"
-      :audio-output="audioOutput"
-      :playing="playing"
-      @enterFullScreen="goFullScreen"
-      @changePlayState="changePlayState"
-      @seeking="seeking"
-      @seekingStart="seekingStart"
-      @seekingEnd="seekingEnd"
-    />
-    <player-fullscreen
-      v-if="isFullscreenPlayer"
-      :music="currentPlayingMusic || {}"
-      :audio-output="audioOutput"
-      :playing="playing"
-      @exitFullScreen="goFullScreen"
-      @changePlayState="changePlayState"
-      @seeking="seeking"
-      @seekingStart="seekingStart"
-      @seekingEnd="seekingEnd"
-    />
+    <transition name="bottom-sheet-transition">
+      <component
+        :is="!isFullscreenPlayer ? PlayerMini : PlayerFullscreen"
+        :music="currentPlayingMusic || {}"
+        :audio-output="audioOutput"
+        :playing="playing"
+        :to-loop="toLoop"
+        @toggleFullScreen="goFullScreen"
+        @changePlayState="changePlayState"
+        @seeking="seeking"
+        @seekingStart="seekingStart"
+        @seekingEnd="seekingEnd"
+        @loopMusic="handleLoopMusic"
+      />
+    </transition>
   </v-container>
 </template>
 
@@ -51,11 +45,14 @@ export default {
         remainingTime: '0:00'
       },
       playing: false,
-      isAudioSeeking: false
+      isAudioSeeking: false,
+      toLoop: 'all',
+      PlayerFullscreen,
+      PlayerMini
     }
   },
   computed: {
-    ...mapState(['currentPlayingMusic']),
+    ...mapState(['currentPlayingMusic', 'currentPlaylist', 'currentPlayingIndex']),
     trackPosition: {
       get () {
         return this.audioOutput.trackPosition
@@ -105,7 +102,18 @@ export default {
       this.$emit('fullScreen')
     },
     nextTrack () {
-      this.updatePlayingMusic({ next: true })
+      if (!((this.currentPlayingIndex === this.currentPlaylist.length - 1) && (this.toLoop !== 'all'))) {
+        this.updatePlayingMusic({ next: true })
+      }
+    },
+    handleLoopMusic () {
+      if (this.toLoop === true) {
+        this.toLoop = 'all'
+      } else if (this.toLoop === 'all') {
+        this.toLoop = false
+      } else {
+        this.toLoop = true
+      }
     }
   }
 }

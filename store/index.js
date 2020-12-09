@@ -13,7 +13,7 @@ export default () => new Vuex.Store({
   },
   mutations: {
     allMusic (state, payload) {
-      state.allMusic = payload
+      state.allMusic = payload.sort((a, b) => a.title > b.title ? 1 : -1)
     },
     currentPlayingMusic (state, payload) {
       payload && (state.currentPlayingMusic = payload)
@@ -45,8 +45,6 @@ export default () => new Vuex.Store({
     },
 
     updatePlayingMusic ({ commit, state }, data) {
-      // The data property will come with an album name
-      // Acommpanied by the song to play
       if (data.next) {
         if (state.currentPlayingIndex < state.currentPlaylist.length - 1) {
           commit('currentPlayingIndex', 'next')
@@ -63,6 +61,14 @@ export default () => new Vuex.Store({
         commit('currentPlayingMusic', data.music)
         commit('currentPlaylist', data.album || state.allMusic)
       }
+    },
+
+    deleteMusicItem ({ dispatch }, id) {
+      localForage.removeItem(id).then((deleteRef) => {
+        dispatch('fetchAllMusic')
+      }).catch((error) => {
+        console.log(error)
+      })
     }
   }
 })
