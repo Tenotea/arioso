@@ -108,11 +108,11 @@ export default {
     },
     handleLoopMusic () {
       if (this.toLoop === true) {
-        this.toLoop = 'all'
-      } else if (this.toLoop === 'all') {
         this.toLoop = false
-      } else {
+      } else if (this.toLoop === 'all') {
         this.toLoop = true
+      } else {
+        this.toLoop = 'all'>>>>>>> 
       }
     }
   }

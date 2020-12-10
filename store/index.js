@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import localForage from 'localforage'
+import shuffler from 'array-shuffle'
 Vue.use(Vuex)
 
 export default () => new Vuex.Store({
@@ -69,6 +70,14 @@ export default () => new Vuex.Store({
       }).catch((error) => {
         console.log(error)
       })
+    },
+    
+    shuffleCurrentPlaylist ({ state, commit }, shuffle) {
+      if (shuffle) {
+        commit('currentPlaylist', shuffler(state.currentPlaylist))
+      } else {
+        commit('currentPlaylist', state.allMusic)
+      }
     }
   }
 })
