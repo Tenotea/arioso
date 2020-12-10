@@ -112,7 +112,7 @@ export default {
       } else if (this.toLoop === 'all') {
         this.toLoop = true
       } else {
-        this.toLoop = 'all'
+        this.toLoop = 'all'>>>>>>> 
       }
     }
   }

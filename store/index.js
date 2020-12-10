@@ -71,7 +71,7 @@ export default () => new Vuex.Store({
         console.log(error)
       })
     },
-
+    
     shuffleCurrentPlaylist ({ state, commit }, shuffle) {
       if (shuffle) {
         commit('currentPlaylist', shuffler(state.currentPlaylist))
