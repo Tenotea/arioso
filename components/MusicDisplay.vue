@@ -54,10 +54,13 @@
                   <v-list-item
                     v-for="option in options"
                     :key="option.id"
+                    @[option.eventName]="() => option.action(music._id)"
                   >
-                    <v-list-item-title @[option.eventName]="option.action">
-                      {{ option.name }}
-                    </v-list-item-title>
+                    <v-list-item-content>
+                      <v-list-item-subtitle>
+                        {{ option.name }}
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -72,25 +75,13 @@
 
 <script>
 import { mapActions } from 'vuex'
+import musicOptions from '../mixins/musicOptions'
 export default {
+  mixins: [musicOptions],
   props: {
     music: {
       type: Object,
       required: true
-    }
-  },
-  data () {
-    return {
-      options: [
-        {
-          id: 1,
-          name: 'Delete',
-          eventName: 'click',
-          action: () => {
-            this.deleteMusicItem(this.music._id)
-          }
-        }
-      ]
     }
   },
   computed: {
@@ -103,8 +94,6 @@ export default {
     playMusic (e) {
       if (!e.target.classList.contains('music-options')) {
         this.updatePlayingMusic({ music: this.music })
-      } else {
-        // Open options
       }
     }
   }

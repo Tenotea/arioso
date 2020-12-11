@@ -12,11 +12,27 @@
           {{ music.artist || '&lt;unknown&gt;' }}
         </p>
       </v-toolbar-title>
-      <v-app-bar-nav-icon color="white">
+      <v-app-bar-nav-icon color="white" @click="viewPlaylist = !viewPlaylist">
         <v-icon>
-          mdi-dots-vertical
+          mdi-playlist-music
         </v-icon>
       </v-app-bar-nav-icon>
+      <v-menu transition="slide-y-transition" bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-app-bar-nav-icon color="white" v-bind="attrs" v-on="on">
+            <v-icon>
+              mdi-dots-vertical
+            </v-icon>
+          </v-app-bar-nav-icon>
+        </template>
+        <v-list color="background" min-width="150px">
+          <v-list-item v-for="option in options" :key="option.id">
+            <v-list-item-title @[option.eventName]="() => option.action(music._id)">
+              {{ option.name }}
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <v-card
       max-width="600px"
@@ -24,7 +40,7 @@
       color="background"
       tile
       flat
-      class="mx-auto mt-5 mt-md-8 "
+      class="mx-auto mt-12 mt-md-12 "
     >
       <div class="thumbVisser mx-auto mb-13 mb-md-16">
         <v-avatar :color="!music.thumb ? 'primary' : ''" :size="viewPort" md="400" class="d-block song-disc elevation-10" :class="{'active-song': playing}">
@@ -34,7 +50,7 @@
           </v-icon>
         </v-avatar>
       </div>
-      <v-card-text class="d-flex align-center justify-center mt-n9">
+      <v-card-text class="d-flex align-center justify-center mt-n4">
         <p class="text-caption font-weight-regular pr-2 mt-n1">
           {{ audioOutput.currentTime }}
         </p>
@@ -51,7 +67,7 @@
           -{{ audioOutput.remainingTime }}
         </p>
       </v-card-text>
-      <v-card-actions class="d-flex align-center justify-space-between mx-auto mt-n2 mt-md-7" :style="{maxWidth: '400px'}">
+      <v-card-actions class="d-flex align-center justify-space-between mx-auto mt-0 mt-md-5" :style="{maxWidth: '450px'}">
         <v-btn :color="!toLoop ? 'grey darken-4' : 'primary '" fab x-small @click="repeat">
           <v-icon :color="!toLoop ? 'grey lighten-1' : 'white'">
             {{ toLoop === true ? 'mdi-repeat-once' : 'mdi-repeat' }}
@@ -84,13 +100,22 @@
           </v-icon>
         </v-btn>
       </v-card-actions>
+      <v-bottom-sheet v-model="viewPlaylist" scrollable :style="{overflow: 'auto'}">
+        <v-card class="px-4 current-playlist" color="background">
+          <playlist-view />
+        </v-card>
+      </v-bottom-sheet>
     </v-card>
   </v-container>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import musicOptions from '../mixins/musicOptions'
+import PlaylistView from './Playlist'
 export default {
+  components: { PlaylistView },
+  mixins: [musicOptions],
   props: {
     playing: Boolean,
     toLoop: {
@@ -108,7 +133,8 @@ export default {
   },
   data () {
     return {
-      shuffled: false
+      shuffled: false,
+      viewPlaylist: false
     }
   },
   computed: {
@@ -156,6 +182,11 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+  .v-card.current-playlist {
+    overflow: auto !important;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 </style>

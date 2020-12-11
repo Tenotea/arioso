@@ -8,22 +8,32 @@ export default () => new Vuex.Store({
   state: {
     allMusic: [],
     currentPlayingMusic: { },
-    lastPlayedMusic: {},
     currentPlayingIndex: null,
-    currentPlaylist: null
+    currentPlaylist: null,
+    fetchError: null,
+    deleteError: null
+    // lastPlayedMusic: {}, // A feature for later
   },
+
   mutations: {
     allMusic (state, payload) {
-      state.allMusic = payload.sort((a, b) => a.title > b.title ? 1 : -1)
+      try {
+        state.allMusic = payload.sort((a, b) => a.title > b.title ? 1 : -1)
+      } catch (exception) {
+        state.allMusic = payload
+      }
     },
+
     currentPlayingMusic (state, payload) {
       payload && (state.currentPlayingMusic = payload)
       // state.lastPlayedMusic = payload
     },
+
     currentPlaylist (state, payload) {
       state.currentPlaylist = payload
       state.currentPlayingIndex = payload.findIndex(({ _id }) => state.currentPlayingMusic._id === _id)
     },
+
     currentPlayingIndex (state, payload) {
       if (typeof payload === 'number') {
         state.currentPlayingIndex = payload
@@ -32,46 +42,60 @@ export default () => new Vuex.Store({
       } else {
         state.currentPlayingIndex--
       }
+    },
+
+    mutFetchError (state, payload) {
+      state.fetchError = payload
+    },
+
+    mutDeleteError (state, payload) {
+      state.deleteError = payload
     }
   },
+
   actions: {
     fetchAllMusic (context, playlist) {
+      context.commit('mutFetchError', null)
       const musicstore = []
       localForage.iterate((value, key, index) => {
         musicstore.push(value)
       }).then(() => {
-        context.commit('allMusic', musicstore)
-        context.commit('currentPlaylist', playlist || musicstore)
+        if (musicstore.length < 1) {
+          context.commit('allMusic', 'empty')
+        } else {
+          context.commit('allMusic', musicstore)
+          context.commit('currentPlaylist', playlist || musicstore)
+        }
+      }).catch(() => {
+        context.commit('mutFetchError', ['Failed to fetch music files'])
       })
     },
 
     updatePlayingMusic ({ commit, state }, data) {
-      if (data.next) {
-        if (state.currentPlayingIndex < state.currentPlaylist.length - 1) {
+      if (data.next || data.prev) {
+        if (state.currentPlayingIndex < state.currentPlaylist.length - 1 && data.next) {
           commit('currentPlayingIndex', 'next')
+        } else if (state.currentPlayingIndex > 0 && data.prev) {
+          commit('currentPlayingIndex', 'prev')
         } else {
           commit('currentPlayingIndex', 0)
         }
         commit('currentPlayingMusic', state.currentPlaylist[state.currentPlayingIndex])
-      } else if (data.prev) {
-        if (state.currentPlayingIndex > 0) {
-          commit('currentPlayingIndex', 'prev')
-          commit('currentPlayingMusic', state.currentPlaylist[state.currentPlayingIndex])
-        }
       } else {
         commit('currentPlayingMusic', data.music)
         commit('currentPlaylist', data.album || state.allMusic)
       }
     },
 
-    deleteMusicItem ({ dispatch }, id) {
+    deleteMusicItem ({ dispatch, commit }, id) {
+      commit('mutDeleteError', null)
       localForage.removeItem(id).then((deleteRef) => {
         dispatch('fetchAllMusic')
-      }).catch((error) => {
-        console.log(error)
+      }).catch(() => {
+        commit('mutDeleteError', ['Failed to delete music'])
       })
     },
-    
+
     shuffleCurrentPlaylist ({ state, commit }, shuffle) {
       if (shuffle) {
         commit('currentPlaylist', shuffler(state.currentPlaylist))

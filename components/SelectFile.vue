@@ -1,12 +1,14 @@
 <template>
   <v-form>
     <v-file-input
-      solo
-      truncate-length="30"
+      filled
+      placeholder="Select music files"
+      truncate-length="10"
       chips
-      label="Select a song"
+      outlined
       color="primary"
-      prepend-inner-icon="mdi-music-note-plus"
+      background-color="background"
+      prepend-inner-icon="mdi-music-circle"
       :prepend-icon="null"
       multiple
       @change="fileInputChange"
@@ -25,14 +27,7 @@ export default {
   methods: {
     fileInputChange (e) {
       this.$emit('fileChange', e)
-    },
-    proceed () {
-      this.$emit('proceedToStore')
     }
   }
 }
 </script>
-
-<style>
-
-</style>

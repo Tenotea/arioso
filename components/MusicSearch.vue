@@ -5,7 +5,6 @@
       placeholder="search for song title"
       solo
       prepend-inner-icon="mdi-magnify"
-      height="20px"
       color="primary"
       background-color="background"
       rounded

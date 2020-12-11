@@ -84,7 +84,6 @@ export default {
       const audEl = this.$refs.audioOutput
       const currentTime = (audEl.duration * value) / 100
       audEl.currentTime = currentTime
-      // audEl.play() //This makes playing take action when the audio duration changes
     },
     seekingStart (e) {
       this.isAudioSeeking = true
@@ -112,7 +111,7 @@ export default {
       } else if (this.toLoop === 'all') {
         this.toLoop = true
       } else {
-        this.toLoop = 'all'>>>>>>> 
+        this.toLoop = 'all'
       }
     }
   }

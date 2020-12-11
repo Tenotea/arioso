@@ -32,7 +32,7 @@
 export default {
   data () {
     return {
-      menu: [{ id: 1, name: 'My Music', route: '/', icon: 'mdi-headphones' }, { id: 2, name: 'All Music', route: '/all-music', icon: 'mdi-music-circle' }, { id: 3, name: 'Add music', route: '/add-music', icon: 'mdi-music-note-plus' }]
+      menu: [{ id: 1, name: 'My Music', route: '/', icon: 'mdi-headphones' }, { id: 3, name: 'Add music', route: '/add-music', icon: 'mdi-music-note-plus' }]
     }
   }
 }
