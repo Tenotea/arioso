@@ -5,21 +5,17 @@
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
-    "prestart": "npm run build",
     "start": "nuxt start",
     "generate": "nuxt generate",
     "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint": "npm run lint:js"
   },
   "dependencies": {
-    "@nuxtjs/axios": "^5.12.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
     "array-shuffle": "^2.0.0",
     "jsmediatags": "^3.9.3",
     "localforage": "^1.9.0",
-    "nuxt": "^2.14.0",
-    "pouchdb": "^7.2.2",
-    "pouchdb-browser": "^7.2.2"
+    "nuxt": "^2.14.0"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^3.1.0",

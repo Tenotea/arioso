@@ -5,7 +5,7 @@
         class="background px-2"
         tile
         flat
-        :color="(hover || playing) ? 'grey darken-4' : 'background'"
+        :color="(hover || playing) ? 'grey darken-1' : 'background'"
         style="transition: background 200ms ease-out"
         @click="playMusic"
       >

@@ -1,15 +1,20 @@
 <template>
-  <v-app dark>
-    <h1 v-if="error.statusCode === 404">
-      {{ pageNotFound }}
-    </h1>
-    <h1 v-else>
-      {{ otherError }}
-    </h1>
-    <NuxtLink to="/">
-      Home page
-    </NuxtLink>
-  </v-app>
+  <v-container color="background" class="d-flex align-center justify-center" fluid>
+    <v-card max-width="600px" tile color="background" class="px-4 px-md-8 py-6">
+      <v-card-title v-if="error.statusCode === 404">
+        {{ pageNotFound }}
+      </v-card-title>
+      <v-card-title v-else>
+        {{ otherError }}
+      </v-card-title>
+      <v-card-subtitle>
+        Your're supposed to be seeing this page but of you are then Tenotea messed up (Sorry).
+      </v-card-subtitle>
+      <v-btn to="/" color="primary px-3">
+        Go Home
+      </v-btn>
+    </v-card>
+  </v-container>
 </template>
 
 <script>

@@ -4,8 +4,8 @@ export default {
   target: 'server',
   ssr: false,
   server: {
-    port: 8000, // default: 3000
-    host: 'localhost' // default: localhost
+    port: 3000,
+    host: 'localhost'
   },
   head: {
     titleTemplate: '%s',
@@ -19,47 +19,25 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
-  /*
-  ** Global CSS
-  */
-  css: [
-  ],
-  /*
-  ** Plugins to load before mounting the App
-  ** https://nuxtjs.org/guide/plugins
-  */
-  plugins: [
-  ],
-  /*
-  ** Auto import components
-  ** See https://nuxtjs.org/api/configuration-components
-  */
+  pwa: {
+    manifest: {
+      name: 'Arioso - Music Player',
+      short_name: 'Arioso',
+      description: 'Listen in browser',
+      background_color: '#282726',
+      theme_color: '#282726',
+      lang: 'en'
+    }
+  },
   components: true,
-  /*
-  ** Nuxt.js dev-modules
-  */
   buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
     '@nuxtjs/vuetify'
   ],
-  /*
-  ** Nuxt.js modules
-  */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa'
   ],
-  /*
-  ** Axios module configuration
-  ** See https://axios.nuxtjs.org/options
-  */
-  axios: {},
-  /*
-  ** vuetify module configuration
-  ** https://github.com/nuxt-community/vuetify-module
-  */
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
@@ -81,11 +59,5 @@ export default {
         }
       }
     }
-  },
-  /*
-  ** Build configuration
-  ** See https://nuxtjs.org/api/configuration-build/
-  */
-  build: {
   }
 }
