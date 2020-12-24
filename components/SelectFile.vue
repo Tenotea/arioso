@@ -11,6 +11,7 @@
       prepend-inner-icon="mdi-music-circle"
       :prepend-icon="null"
       multiple
+      accept=".mp3,audio/*"
       @change="fileInputChange"
     >
       <template v-slot:selection="{ text }">

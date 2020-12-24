@@ -62,6 +62,16 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
+                  <!-- commented out code work, aim is to avoid mixin -->
+                  <!-- <v-list-item
+                    @click="() => deleteMusicItem(music._id)"
+                  >
+                    <v-list-item-content>
+                      <v-list-item-subtitle>
+                        delete
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item> -->
                 </v-list>
               </v-menu>
             </v-card-actions>
@@ -90,7 +100,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['updatePlayingMusic', 'deleteMusicItem']),
+    ...mapActions(['updatePlayingMusic']),
     playMusic (e) {
       if (!e.target.classList.contains('music-options')) {
         this.updatePlayingMusic({ music: this.music })

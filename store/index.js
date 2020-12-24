@@ -17,11 +17,12 @@ export default () => new Vuex.Store({
 
   mutations: {
     allMusic (state, payload) {
-      try {
-        state.allMusic = payload.sort((a, b) => a.title > b.title ? 1 : -1)
-      } catch (exception) {
-        state.allMusic = payload
-      }
+      state.allMusic = payload.sort((a, b) => a.title > b.title ? 1 : -1)
+      // try {
+      //   state.allMusic = payload.sort((a, b) => a.title > b.title ? 1 : -1)
+      // } catch (exception) {
+      //   state.allMusic = payload
+      // }
     },
 
     currentPlayingMusic (state, payload) {
@@ -61,7 +62,7 @@ export default () => new Vuex.Store({
         musicstore.push(value)
       }).then(() => {
         if (musicstore.length < 1) {
-          context.commit('allMusic', 'empty')
+          context.commit('allMusic', [])
         } else {
           context.commit('allMusic', musicstore)
           context.commit('currentPlaylist', playlist || musicstore)
@@ -89,8 +90,9 @@ export default () => new Vuex.Store({
 
     deleteMusicItem ({ dispatch, commit }, id) {
       commit('mutDeleteError', null)
-      localForage.removeItem(id).then((deleteRef) => {
-        dispatch('fetchAllMusic')
+      localForage.removeItem(id).then(() => {
+        const updatedMusics = this.state.allMusic.filter(music => music._id !== id)
+        commit('allMusic', updatedMusics)
       }).catch(() => {
         commit('mutDeleteError', ['Failed to delete music'])
       })
@@ -103,5 +105,9 @@ export default () => new Vuex.Store({
         commit('currentPlaylist', state.allMusic)
       }
     }
+  },
+
+  getters: {
+    getAllMusics: state => state.allMusic
   }
 })
